@@ -22,8 +22,23 @@ const hbs = exphbs.create({
         table += '</tr>';
       }
       table += '</table>';
+
       return new hbs.handlebars.SafeString(table);
-    }
+    },
+
+    error404: function() {
+        const classOptions = ['still', 'rotate', 'shrink'];
+        const divCount = Math.floor(Math.random() * (50 - 20 + 1)) + 20; // ***** random number between 20 and 50 *****
+        let divs = '';
+  
+        for (let i = 0; i < divCount; i++) {
+          const randomClass = classOptions[Math.floor(Math.random() * classOptions.length)];
+          divs += `<div class="${randomClass}">404</div>`;
+        }
+  
+        return new hbs.handlebars.SafeString(divs);
+      }
+
   }
 });
 
@@ -46,9 +61,13 @@ app.post('/grid', (req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send('**ERROR***');
 });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+app.use((req, res, next) => {
+    res.status(404).render('404', { layout: false });
+  });
